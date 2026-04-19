@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kitchen Brain 🧠</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0f1923 0%,#1a2d1e 50%,#0f1923 100%);color:#f0f0f0;min-height:100vh}
+    ::-webkit-scrollbar{display:none}
+    #app{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
+
+    /* HEADER */
+    .header{padding:24px 20px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06)}
+    .logo{display:flex;align-items:center;gap:10;margin-bottom:4px}
+    .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#4CAF50,#81C784);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+    .logo-text{font-size:22px;font-weight:800;background:linear-gradient(135deg,#81C784,#A5D6A7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{font-size:12px;color:rgba(255,255,255,0.4)}
+
+    /* NAV */
+    .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(15,25,35,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.08);display:flex;padding:8px 0 16px;z-index:100}
+    .nav-btn{flex:1;background:none;border:none;color:rgba(255,255,255,0.35);font-size:10px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+    .nav-btn.active{color:#4CAF50;font-weight:700}
+    .nav-btn span{font-size:22px}
+
+    /* CONTENT */
+    .content{padding:16px 20px 100px}
+    .section-title{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;margin-top:20px}
+
+    /* STATS */
+    .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
+    .stat-card{background:rgba(255,255,255,0.05);border-radius:14px;padding:14px 12px;text-align:center}
+    .stat-num{font-size:28px;font-weight:800;line-height:1}
+    .stat-label{font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px}
+
+    /* BUTTONS */
+    .btn-green{width:100%;padding:18px;background:linear-gradient(135deg,#4CAF50,#2E7D32);border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 24px rgba(76,175,80,0.3);margin-bottom:16px}
+    .btn-ghost{width:100%;padding:18px;background:rgba(255,255,255,0.08);border:none;border-radius:16px;color:#fff;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px}
+
+    /* CARDS */
+    .item-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+    .alert-card{background:rgba(255,109,0,0.1);border:1px solid rgba(255,109,0,0.3);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+    .cat-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .item-name{font-weight:600;font-size:14px}
+    .item-sub{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
+    .badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
+    .delete-btn{background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;font-size:16px;padding:4px}
+
+    /* SEARCH */
+    .search-bar{width:100%;padding:12px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:14px}
+    .search-bar::placeholder{color:rgba(255,255,255,0.3)}
+    .cat-pills{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:4px}
+    .cat-pill{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap}
+    .cat-pill.active{border-color:#4CAF50;background:rgba(76,175,80,0.2);color:#4CAF50;font-weight:700}
+
+    /* SCAN */
+    .scan-area{background:rgba(255,255,255,0.04);border:2px dashed rgba(76,175,80,0.4);border-radius:20px;padding:40px;text-align:center;cursor:pointer;margin-bottom:16px}
+    .scan-area h3{font-size:16px;font-weight:600;margin-bottom:8px}
+    .scan-area p{font-size:13px;color:rgba(255,255,255,0.4)}
+    .scan-emoji{font-size:48px;margin-bottom:12px}
+    .preview-img{width:100%;border-radius:16px;margin-bottom:16px;max-height:200px;object-fit:cover}
+    .detected-box{background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.3);border-radius:16px;padding:20px;margin-bottom:16px}
+    .detected-title{font-size:13px;color:#4CAF50;font-weight:600;margin-bottom:12px}
+    .detected-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px}
+    .detected-label{color:rgba(255,255,255,0.5)}
+    .detected-val{font-weight:600}
+
+    /* SPINNER */
+    .spinner-wrap{text-align:center;padding:40px}
+    .spinner-dots{display:flex;justify-content:center;gap:6px;margin-top:20px}
+    .dot{width:8px;height:8px;border-radius:50%;background:#4CAF50;animation:pulse 1s infinite}
+    .dot:nth-child(2){animation-delay:0.3s}
+    .dot:nth-child(3){animation-delay:0.6s}
+    @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
+
+    /* TOAST */
+    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);color:#fff;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:1000;box-shadow:0 8px 24px rgba(0,0,0,0.3);white-space:nowrap;transition:opacity 0.3s}
+
+    /* EMPTY */
+    .empty{text-align:center;padding:60px;color:rgba(255,255,255,0.3)}
+    .empty .big{font-size:48px}
+    .empty h3{margin-top:12px;font-size:16px;font-weight:600;color:rgba(255,255,255,0.5)}
+    .empty p{margin-top:8px;font-size:13px}
+
+    .hidden{display:none}
+    .flex-1{flex:1}
+    .flex-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TOAST -->
+  <div class="toast hidden" id="toast"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🧠</div>
+      <div class="logo-text">Kitchen Brain</div>
+    </div>
+    <div class="subtitle" id="subtitle">AI-powered kitchen manager</div>
+  </div>
+
+  <!-- VIEWS -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="view-dashboard">
+      <div class="stats">
+        <div class="stat-card"><div class="stat-num" id="stat-expired" style="color:#FF1744">0</div><div class="stat-label">Expired</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-expiring" style="color:#FF6D00">0</div><div class="stat-label">Expiring Soon</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-total" style="color:#2E7D32">0</div><div class="stat-label">Total Items</div></div>
+      </div>
+      <button class="btn-green" onclick="triggerScan()">📸 Scan New Item</button>
+      <div class="section-title">⚠️ Needs Attention</div>
+      <div id="alert-list"></div>
+      <div class="section-title">📦 Recent Items</div>
+      <div id="recent-list"></div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div id="view-inventory" class="hidden">
+      <input class="search-bar" id="search-input" placeholder="🔍  Search your kitchen..." oninput="renderInventory()"/>
+      <div class="cat-pills" id="cat-pills"></div>
+      <div class="section-title" id="inv-count"></div>
+      <div id="inventory-list"></div>
+    </div>
+
+    <!-- SCAN -->
+    <div id="view-scan" class="hidden">
+      <div class="section-title">📸 Scan Item</div>
+      <img id="preview-img" class="preview-img hidden"/>
+      <div id="spinner" class="spinner-wrap hidden">
+        <div style="font-size:48px;margin-bottom:16px">🔍</div>
+        <div style="font-size:16px;font-weight:600;color:#4CAF50">AI is reading your item...</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px">Detecting name, category & expiry date</div>
+        <div class="spinner-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      </div>
+      <div id="detected-result" class="hidden">
+        <div class="detected-box">
+          <div class="detected-title">✅ AI detected:</div>
+          <div class="detected-row"><span class="detected-label">🏷️ Name</span><span class="detected-val" id="det-name"></span></div>
+          <div class="detected-row"><span class="detected-label">📦 Quantity</span><span class="detected-val" id="det-qty"></span></div>
+          <div class="detected-row"><span class="detected-label">📁 Category</span><span class="detected-val" id="det-cat"></span></div>
+          <div class="detected-row"><span class="detected-label">📅 Expires</span><span class="detected-val" id="det-exp"></span></div>
+        </div>
+        <button class="btn-green" onclick="confirmAdd()">✅ Add to Kitchen</button>
+        <button class="btn-ghost" onclick="cancelScan()">❌ Cancel</button>
+      </div>
+      <div id="scan-prompt" class="scan-area" onclick="triggerScan()">
+        <div class="scan-emoji">📷</div>
+        <h3>Take a Photo</h3>
+        <p>AI will automatically detect the item name, category and expiry date</p>
+      </div>
+    </div>
+
+    <!-- ALERTS -->
+    <div id="view-alerts" class="hidden">
+      <div class="section-title">🔔 Expiry Alerts</div>
+      <div id="alerts-list"></div>
+    </div>
+
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="nav-btn active" id="nav-dashboard" onclick="showView('dashboard')"><span>🏠</span>Home</button>
+    <button class="nav-btn" id="nav-inventory" onclick="showView('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-btn" id="nav-scan" onclick="showView('scan')"><span>📸</span>Scan</button>
+    <button class="nav-btn" id="nav-alerts" onclick="showView('alerts')"><span>🔔</span><span id="alert-label">Alerts</span></button>
+  </nav>
+
+  <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)"/>
+</div>
+
+<script>
+const CATS = {
+  Dairy:      {icon:"🥛", color:"#E8F4FD", accent:"#2196F3"},
+  Vegetables: {icon:"🥦", color:"#E8F5E9", accent:"#4CAF50"},
+  Fruits:     {icon:"🍎", color:"#FFF3E0", accent:"#FF9800"},
+  Meat:       {icon:"🥩", color:"#FCE4EC", accent:"#E91E63"},
+  Bakery:     {icon:"🍞", color:"#FFF8E1", accent:"#FFC107"},
+  Beverages:  {icon:"🧃", color:"#E3F2FD", accent:"#03A9F4"},
+  Frozen:     {icon:"🧊", color:"#E8EAF6", accent:"#3F51B5"},
+  Condiments: {icon:"🧴", color:"#F3E5F5", accent:"#9C27B0"},
+  Snacks:     {icon:"🍿", color:"#FBE9E7", accent:"#FF5722"},
+  Other:      {icon:"📦", color:"#ECEFF1", accent:"#607D8B"},
+};
+
+function addDays(n){const d=new Date(Date.now()+n*86400000);return d.toISOString().split('T')[0]}
+function getDays(ds){const t=new Date();t.setHours(0,0,0,0);const e=new Date(ds);e.setHours(0,0,0,0);return Math.ceil((e-t)/86400000)}
+function getStatus(d){
+  if(d<0)  return{label:"Expired",      color:"#FF1744",bg:"#FFE5EA"};
+  if(d<=2) return{label:d+"d left",     color:"#FF6D00",bg:"#FFF3E0"};
+  if(d<=7) return{label:d+"d left",     color:"#F9A825",bg:"#FFFDE7"};
+  return         {label:d+"d left",     color:"#2E7D32",bg:"#E8F5E9"};
+}
+
+let items = [
+  {id:1,name:"Greek Yogurt",   quantity:"500g",  category:"Dairy",      expiryDate:addDays(2)},
+  {id:2,name:"Fresh Spinach",  quantity:"200g",  category:"Vegetables", expiryDate:addDays(3)},
+  {id:3,name:"Chicken Breast", quantity:"600g",  category:"Meat",       expiryDate:addDays(1)},
+  {id:4,name:"Whole Milk",     quantity:"1L",    category:"Dairy",      expiryDate:addDays(10)},
+  {id:5,name:"Sourdough Bread",quantity:"1 loaf",category:"Bakery",     expiryDate:addDays(4)},
+  {id:6,name:"Strawberries",   quantity:"300g",  category:"Fruits",     expiryDate:addDays(-1)},
+];
+
+let currentView = "dashboard";
+let activeCat = "All";
+let pendingItem = null;
+let toastTimer = null;
+
+// ── TOAST ──
+function showToast(msg, color="#4CAF50"){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.style.background=color;
+  t.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.add("hidden"),3000);
+}
+
+// ── VIEWS ──
+function showView(v){
+  ["dashboard","inventory","scan","alerts"].forEach(n=>{
+    document.getElementById("view-"+n).classList.toggle("hidden",n!==v);
+    document.getElementById("nav-"+n).classList.toggle("active",n===v);
+  });
+  currentView=v;
+  if(v==="dashboard") renderDashboard();
+  if(v==="inventory") renderInventory();
+  if(v==="alerts")    renderAlerts();
+  if(v==="scan"){
+    document.getElementById("scan-prompt").classList.remove("hidden");
+    document.getElementById("detected-result").classList.add("hidden");
+    document.getElementById("spinner").classList.add("hidden");
+    document.getElementById("preview-img").classList.add("hidden");
+  }
+}
+
+// ── ITEM CARD HTML ──
+function itemCardHTML(item, showDelete=true){
+  const d=getDays(item.expiryDate);
+  const st=getStatus(d);
+  const c=CATS[item.category]||CATS.Other;
+  return `
+    <div class="item-card" style="border-left:3px solid ${c.accent}">
+      <div class="cat-icon" style="background:${c.color}">${c.icon}</div>
+      <div class="flex-1">
+        <div class="item-name">${item.name}</div>
+        <div class="item-sub">${item.category} · ${item.quantity}</div>
+      </div>
+      <div class="flex-col">
+        <span class="badge" style="color:${st.color};background:${st.bg}">${st.label}</span>
+        ${showDelete?`<button class="delete-btn" onclick="removeItem(${item.id})">🗑️</button>`:""}
+      </div>
+    </div>`;
+}
+
+function alertCardHTML(item){
+  const d=getDays(item.expiryDate);
+  const st=getStatus(d);
+  const c=CATS[item.category]||CATS.Other;
+  const tip = d<0 ? `<div style="font-size:12px;color:#FF1744;margin-top:4px">❌ Please discard</div>`
+             : d<=2 ? `<div style="font-size:12px;color:#FF9800;margin-top:4px">💡 Use soon!</div>` : "";
+  return `
+    <div class="alert-card" style="border-color:${st.color}44;background:${st.bg}22">
+      <div class="cat-icon" style="background:${c.color}">${c.icon}</div>
+      <div class="flex-1">
+        <div class="item-name">${item.name}</div>
+        <div class="item-sub">Expires: ${item.expiryDate}</div>
+        ${tip}
+      </div>
+      <span class="badge" style="color:${st.color};background:${st.bg}">${st.label}</span>
+    </div>`;
+}
+
+// ── DASHBOARD ──
+function renderDashboard(){
+  const expired  = items.filter(i=>getDays(i.expiryDate)<0);
+  const expiring = items.filter(i=>{const d=getDays(i.expiryDate);return d>=0&&d<=2;});
+  document.getElementById("stat-expired").textContent  = expired.length;
+  document.getElementById("stat-expiring").textContent = expiring.length;
+  document.getElementById("stat-total").textContent    = items.length;
+  document.getElementById("subtitle").textContent      = `AI-powered kitchen manager · ${items.length} items tracked`;
+
+  const urgent = [...expired,...expiring];
+  const alertEl = document.getElementById("alert-list");
+  alertEl.innerHTML = urgent.length ? urgent.slice(0,4).map(alertCardHTML).join("") : `<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:8px 0">No urgent items 🎉</div>`;
+
+  document.getElementById("recent-list").innerHTML = items.slice(0,5).map(i=>itemCardHTML(i,false)).join("");
+
+  const count = expired.length + expiring.length;
+  document.getElementById("alert-label").textContent = count > 0 ? `Alerts ${count}` : "Alerts";
+}
+
+// ── INVENTORY ──
+function renderInventory(){
+  // Pills
+  const pillsEl = document.getElementById("cat-pills");
+  const cats = ["All",...Object.keys(CATS)];
+  pillsEl.innerHTML = cats.map(c=>`
+    <button class="cat-pill${activeCat===c?" active":""}" onclick="setCat('${c}')">
+      ${c!=="All"?(CATS[c]?.icon+" "):""}${c}
+    </button>`).join("");
+
+  const q = document.getElementById("search-input").value.toLowerCase();
+  const filtered = items.filter(i=>
+    i.name.toLowerCase().includes(q) &&
+    (activeCat==="All"||i.category===activeCat)
+  );
+
+  document.getElementById("inv-count").textContent = filtered.length+" items";
+  document.getElementById("inventory-list").innerHTML = filtered.length
+    ? filtered.map(i=>itemCardHTML(i,true)).join("")
+    : `<div class="empty"><div class="big">🔍</div><h3>No items found</h3></div>`;
+}
+
+function setCat(c){activeCat=c;renderInventory();}
+
+// ── ALERTS ──
+function renderAlerts(){
+  const urgent = items.map(i=>({...i,days:getDays(i.expiryDate)})).filter(i=>i.days<=7).sort((a,b)=>a.days-b.days);
+  document.getElementById("alerts-list").innerHTML = urgent.length
+    ? urgent.map(alertCardHTML).join("")
+    : `<div class="empty"><div class="big">✅</div><h3>All good!</h3><p>No items expiring soon</p></div>`;
+}
+
+// ── REMOVE ──
+function removeItem(id){
+  items=items.filter(i=>i.id!==id);
+  showToast("🗑️ Item removed","#607D8B");
+  renderDashboard();
+  if(currentView==="inventory") renderInventory();
+  if(currentView==="alerts")    renderAlerts();
+}
+
+// ── SCAN ──
+function triggerScan(){document.getElementById("file-input").click();}
+
+async function handlePhoto(e){
+  const file=e.target.files[0]; if(!file)return;
+  showView("scan");
+  document.getElementById("scan-prompt").classList.add("hidden");
+  document.getElementById("detected-result").classList.add("hidden");
+
+  const reader=new FileReader();
+  reader.onload=async(ev)=>{
+    const dataUrl=ev.target.result;
+    const img=document.getElementById("preview-img");
+    img.src=dataUrl; img.classList.remove("hidden");
+    document.getElementById("spinner").classList.remove("hidden");
+
+    try{
+      const base64=dataUrl.split(',')[1];
+      const result=await analyzeImage(base64);
+      pendingItem=result;
+      document.getElementById("spinner").classList.add("hidden");
+      const c=CATS[result.category]||CATS.Other;
+      document.getElementById("det-name").textContent=result.name;
+      document.getElementById("det-qty").textContent=result.quantity;
+      document.getElementById("det-cat").textContent=c.icon+" "+result.category;
+      document.getElementById("det-exp").textContent=result.expiryDate;
+      document.getElementById("detected-result").classList.remove("hidden");
+    }catch(err){
+      document.getElementById("spinner").classList.add("hidden");
+      showToast("❌ Could not read image. Try again.","#FF1744");
+      cancelScan();
+    }
+  };
+  reader.readAsDataURL(file);
+  e.target.value="";
+}
+
+function confirmAdd(){
+  if(!pendingItem)return;
+  items.unshift({id:Date.now(),...pendingItem});
+  pendingItem=null;
+  showToast("✅ Item added to your kitchen!");
+  renderDashboard();
+  showView("inventory");
+}
+
+function cancelScan(){
+  pendingItem=null;
+  document.getElementById("preview-img").classList.add("hidden");
+  document.getElementById("detected-result").classList.add("hidden");
+  document.getElementById("spinner").classList.add("hidden");
+  document.getElementById("scan-prompt").classList.remove("hidden");
+  showView("dashboard");
+}
+
+// ── AI ──
+async function analyzeImage(base64){
+  const API_KEY="YOUR_GEMINI_API_KEY"; // Get free key from aistudio.google.com
+
+  if(API_KEY==="YOUR_GEMINI_API_KEY"){
+    await new Promise(r=>setTimeout(r,2000));
+    const mocks=[
+      {name:"Orange Juice",  quantity:"1L",   category:"Beverages", expiryDate:addDays(7)},
+      {name:"Cheddar Cheese",quantity:"250g", category:"Dairy",     expiryDate:addDays(5)},
+      {name:"Eggs",          quantity:"x6",   category:"Other",     expiryDate:addDays(14)},
+      {name:"Butter",        quantity:"200g", category:"Dairy",     expiryDate:addDays(20)},
+      {name:"Tomatoes",      quantity:"4pcs", category:"Vegetables",expiryDate:addDays(4)},
+    ];
+    return mocks[Math.floor(Math.random()*mocks.length)];
+  }
+
+  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({contents:[{parts:[
+      {inline_data:{mime_type:"image/jpeg",data:base64}},
+      {text:`Analyze this food item image. Return ONLY a JSON object with:
+- name: product name
+- quantity: amount/weight on package
+- category: one of [Dairy,Vegetables,Fruits,Meat,Bakery,Beverages,Frozen,Condiments,Snacks,Other]
+- expiryDate: expiry date as YYYY-MM-DD (estimate if not visible)
+Return ONLY raw JSON, no markdown.`}
+    ]}]})
+  });
+  const data=await res.json();
+  const text=data.candidates[0].content.parts[0].text.replace(/```json|```/g,"").trim();
+  return JSON.parse(text);
+}
+
+// INIT
+renderDashboard();
+</script>
+</body>
+</html>
